@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "arena/**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  static-checks:
+    name: Static checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Ruff lint
+        run: ruff check src tests || true  # advisory lint; tests are authoritative
+      - name: Package import smoke (no credentials, no network)
+        run: python -c "import failsafe, failsafe.cli, failsafe.detectors; print('ok', failsafe.__version__)"
+
+  unit-tests:
+    name: Unit + integration tests (deterministic core)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install with agentic extras
+        run: pip install -e ".[dev]" && pip install langgraph langchain-core
+      - name: Run tests (no API credentials configured)
+        run: pytest tests/ -q
+        env:
+          FAILSAFE_LLM_ENABLED: "false"
+
+  regression-tests:
+    name: Regression suite + failing→passing demonstration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Regression tests (known defects must stay caught)
+        run: pytest tests/regression -q
+      - name: "Demonstration: generated test fails on the defective agent and passes after the fix"
+        run: |
+          python evals/regression_eval.py
+          python - <<'EOF'
+          import json
+          data = json.load(open("evals/results/regression_eval.json"))
+          assert data["generated"] > 0, "no regression tests generated"
+          assert data["reproduced_by_defect"] == data["generated"], "a generated test failed to reproduce the defect"
+          assert data["passed_after_fix"] == data["generated"], "a generated test failed after the defect was corrected"
+          print(f"FAILING->PASSING demo OK: {data['generated']} tests reproduce the defect and all pass after the fix")
+          EOF
+
+  ci-gate-demo:
+    name: CI gate determinism (strict mode)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Known regression is caught (gate must FAIL)
+        run: |
+          failsafe init
+          failsafe replay buggy task-db-lookup && exit 1 || true
+      - name: Clean control stays clean (gate must PASS)
+        run: failsafe replay good task-db-lookup
+      - name: Gate decisions are deterministic
+        run: python -c "
+          from failsafe.ci import evaluate_gate
+          from failsafe.config import CIGateConfig
+          a = evaluate_gate([]).to_dict()
+          b = evaluate_gate([]).to_dict()
+          assert a['passed'] == b['passed'] == True
+          print('gate determinism OK')"

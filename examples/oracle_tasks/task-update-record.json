@@ -1,0 +1,47 @@
+{
+  "spec": {
+    "id": "task-update-record",
+    "name": "Correct record update",
+    "description": "Upgrade user u-1002 from pro to enterprise without touching other fields.",
+    "instruction": "Upgrade user u-1002's plan to 'enterprise'. Do not modify any other fields.",
+    "required_outcomes": [
+      {
+        "type": "tool_called",
+        "tool": "db_update"
+      },
+      {
+        "type": "tool_success",
+        "tool": "db_update"
+      }
+    ],
+    "forbidden_outcomes": [],
+    "tool_policy": {},
+    "metadata": {}
+  },
+  "oracle_checks": [
+    {
+      "check": "world_record_equals",
+      "id": "u-1002",
+      "fields": {
+        "plan": "enterprise",
+        "name": "Grace Hopper",
+        "active": true
+      }
+    },
+    {
+      "check": "world_mutation_count",
+      "id": "u-1002",
+      "op": "update",
+      "count": 1
+    },
+    {
+      "check": "no_duplicate_mutation"
+    }
+  ],
+  "tools_required": [
+    "db_update"
+  ],
+  "fault_schedule": [],
+  "expected_behavior": "Exactly one update; only the plan field changes.",
+  "category": "record_update"
+}

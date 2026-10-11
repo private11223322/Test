@@ -1,0 +1,87 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "failsafe"
+version = "0.1.0"
+description = "Agentic AI reliability testing framework: failure detection, fault injection, recovery evaluation, and regression testing for AI agents."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Failsafe Contributors" }]
+keywords = ["ai-agents", "reliability", "testing", "fault-injection", "evaluation"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = [
+    "pydantic>=2.5,<3",
+    "SQLAlchemy>=2.0,<3",
+    "click>=8.1,<9",
+    "jinja2>=3.1,<4",
+    "jsonschema>=4.20,<5",
+    "python-dotenv>=1.0,<2",
+    "httpx>=0.25,<1",
+]
+
+[project.optional-dependencies]
+agents = [
+    "langgraph>=0.2,<1",
+    "langchain-core>=0.3,<1",
+]
+llm = [
+    "openai>=1.30,<2",
+]
+ui = [
+    "streamlit>=1.32,<2",
+]
+postgres = [
+    "psycopg2-binary>=2.9,<3",
+]
+dev = [
+    "pytest>=8.0,<9",
+    "pytest-cov>=4.1,<6",
+    "ruff>=0.4,<1",
+    "mypy>=1.8,<2",
+]
+all = [
+    "failsafe[agents,llm,ui,dev]",
+]
+
+[project.scripts]
+failsafe = "failsafe.cli:main"
+
+[project.urls]
+Documentation = "https://github.com/private11223322/Test"
+Repository = "https://github.com/private11223322/Test"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+failsafe = ["reporting/templates/*", "py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "regression: regression tests generated from observed failures",
+    "integration: integration tests",
+    "llm: tests requiring LLM credentials (skipped by default)",
+    "slow: slow tests",
+]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true

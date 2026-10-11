@@ -1,0 +1,55 @@
+{
+  "trace_id": "trace-oi-demo",
+  "metadata": {
+    "agent_name": "openinference-demo-agent",
+    "status": "success",
+    "task_id": "task-db-lookup"
+  },
+  "task": {
+    "id": "task-db-lookup",
+    "name": "Look up a user record",
+    "description": "Look up user u-1001 and report their plan.",
+    "instruction": "Find the subscription plan of user u-1001 and state it in your final answer.",
+    "required_outcomes": [
+      {
+        "type": "tool_called",
+        "tool": "db_get"
+      },
+      {
+        "type": "response_contains",
+        "text": "free"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "span_id": "span-1",
+      "name": "db_get",
+      "start_time": "2026-01-01T12:00:00Z",
+      "end_time": "2026-01-01T12:00:01Z",
+      "status": {
+        "code": "OK"
+      },
+      "attributes": {
+        "openinference.span.kind": "TOOL",
+        "tool.name": "db_get",
+        "tool.parameters": "{\"record_id\": \"u-1001\"}",
+        "tool.result": "{\"plan\": \"free\"}"
+      }
+    },
+    {
+      "span_id": "span-2",
+      "parent_id": "span-1",
+      "name": "respond",
+      "start_time": "2026-01-01T12:00:01Z",
+      "end_time": "2026-01-01T12:00:02Z",
+      "status": {
+        "code": "OK"
+      },
+      "attributes": {
+        "openinference.span.kind": "CHAIN",
+        "output.value": "The plan for u-1001 is free."
+      }
+    }
+  ]
+}

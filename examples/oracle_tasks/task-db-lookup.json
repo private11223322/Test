@@ -1,0 +1,37 @@
+{
+  "spec": {
+    "id": "task-db-lookup",
+    "name": "Look up a user record",
+    "description": "Look up user u-1001 and report their plan.",
+    "instruction": "Find the subscription plan of user u-1001 and state it in your final answer.",
+    "required_outcomes": [
+      {
+        "type": "tool_called",
+        "tool": "db_get"
+      },
+      {
+        "type": "response_contains",
+        "text": "free"
+      }
+    ],
+    "forbidden_outcomes": [],
+    "tool_policy": {},
+    "metadata": {}
+  },
+  "oracle_checks": [
+    {
+      "check": "trace_tool_called",
+      "tool": "db_get"
+    },
+    {
+      "check": "response_contains",
+      "text": "free"
+    }
+  ],
+  "tools_required": [
+    "db_get"
+  ],
+  "fault_schedule": [],
+  "expected_behavior": "Agent calls db_get('u-1001') and answers 'free'.",
+  "category": "database_lookup"
+}

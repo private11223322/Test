@@ -1,0 +1,42 @@
+{
+  "spec": {
+    "id": "task-stale-result",
+    "name": "Detect and handle a stale result",
+    "description": "An HTTP endpoint returns a stale response; the agent must not treat it as fresh.",
+    "instruction": "Fetch the config from https://api.example.com/config and apply its 'value' to record cfg-1. If the fetched data is stale or marked stale, do not apply it and explain why.",
+    "required_outcomes": [],
+    "forbidden_outcomes": [],
+    "tool_policy": {},
+    "metadata": {}
+  },
+  "oracle_checks": [
+    {
+      "check": "world_record_equals",
+      "id": "cfg-1",
+      "fields": {
+        "value": "fresh-value"
+      }
+    },
+    {
+      "check": "world_mutation_count",
+      "id": "cfg-1",
+      "op": "update",
+      "count": 0
+    }
+  ],
+  "tools_required": [
+    "fetch_url"
+  ],
+  "fault_schedule": [
+    {
+      "kind": "stale_response",
+      "tool": "fetch_url",
+      "occurrence": 1,
+      "params": {
+        "age_seconds": 86400
+      }
+    }
+  ],
+  "expected_behavior": "Agent refuses to apply the stale value; record unchanged.",
+  "category": "stale_data"
+}

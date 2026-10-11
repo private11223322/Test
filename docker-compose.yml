@@ -1,0 +1,43 @@
+# Optional services for Failsafe. The base project runs locally without any
+# of this — compose is for optional PostgreSQL and a packaged UI demo.
+services:
+  # Failsafe CLI one-shot runs (default: show help)
+  failsafe:
+    build: .
+    environment:
+      FAILSAFE_DB_URL: sqlite:////data/failsafe.db
+      FAILSAFE_LLM_ENABLED: "false"
+    volumes:
+      - failsafe-data:/data
+      - ./reports:/app/reports
+    command: ["--help"]
+
+  # Optional PostgreSQL for production-like persistence.
+  # Use with: FAILSAFE_DB_URL=postgresql+psycopg2://failsafe:failsafe@db:5432/failsafe
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: failsafe
+      POSTGRES_PASSWORD: failsafe   # demo only — override in real deployments
+      POSTGRES_DB: failsafe
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Streamlit trace viewer over the shared data volume.
+  viewer:
+    build: .
+    entrypoint: ["streamlit", "run", "app-ui/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+    environment:
+      FAILSAFE_UI_DB_URL: sqlite:////data/failsafe.db
+    volumes:
+      - failsafe-data:/data
+    ports:
+      - "8501:8501"
+    depends_on:
+      - failsafe
+
+volumes:
+  failsafe-data:
+  pgdata:

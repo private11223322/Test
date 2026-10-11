@@ -1,0 +1,46 @@
+name: LLM judge (optional)
+
+# Runs the semantic judge comparison ONLY when credentials are configured
+# (repository secret OPENAI_API_KEY). Without credentials the job is skipped —
+# the deterministic core is validated in ci.yml regardless.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * 1"
+
+jobs:
+  judge:
+    name: LLM-judge comparison (optional)
+    runs-on: ubuntu-latest
+    # Never blocking: this workflow produces measurements, not gate decisions.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -e ".[dev,llm]"
+      - name: Check credentials
+        id: creds
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -n "$OPENAI_API_KEY" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "OPENAI_API_KEY not configured; judge evaluation skipped."
+          fi
+      - name: Stub pipeline (always safe)
+        run: python evals/judge_comparison.py --provider echo
+      - name: Live judge comparison
+        if: steps.creds.outputs.available == 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python evals/judge_comparison.py --provider openai
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: judge-results
+          path: evals/results/judge_comparison.json
