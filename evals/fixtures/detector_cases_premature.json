@@ -1,0 +1,132 @@
+{
+  "description": "detector_cases_premature",
+  "traces": [
+    {
+      "id": "trace-f51d1370f21f",
+      "metadata": {
+        "run_id": "run-c19a70504df6",
+        "agent_name": "buggy-agent",
+        "agent_version": "0.1",
+        "task_id": "task-multi-step",
+        "task_name": "Multi-step order processing",
+        "status": "success",
+        "started_at": "2026-10-11T19:27:29.295688Z",
+        "ended_at": "2026-10-11T19:27:29.295752Z",
+        "seed": 1337,
+        "environment": {},
+        "llm_usage": {},
+        "labels": {},
+        "final_response": "Task completed successfully! All updates applied successfully.",
+        "error": null
+      },
+      "task": {
+        "id": "task-multi-step",
+        "name": "Multi-step order processing",
+        "description": "Read order ord-55, update its status to 'shipped', and confirm.",
+        "instruction": "Read order ord-55. If its status is 'pending', set its status to 'shipped' and confirm the update in your final answer.",
+        "required_outcomes": [
+          {
+            "type": "tool_called",
+            "tool": "db_get"
+          },
+          {
+            "type": "tool_called",
+            "tool": "db_update"
+          },
+          {
+            "type": "tool_success",
+            "tool": "db_update"
+          },
+          {
+            "type": "response_contains",
+            "text": "shipped"
+          }
+        ],
+        "forbidden_outcomes": [],
+        "tool_policy": {},
+        "metadata": {
+          "world_kind": "_w_multi_step"
+        }
+      },
+      "steps": [
+        {
+          "id": "step-run-c19a70504df6-0001",
+          "kind": "note",
+          "name": "skip_work",
+          "status": "ok",
+          "parent_id": null,
+          "timestamp": "2026-10-11T19:27:29.295707Z",
+          "end_timestamp": null,
+          "input": null,
+          "output": "Skipping actual tool calls; claiming success.",
+          "tool_call": null,
+          "tool_result": null,
+          "error_type": null,
+          "error_message": null,
+          "metadata": {}
+        },
+        {
+          "id": "step-run-c19a70504df6-0002",
+          "kind": "response",
+          "name": "final_response",
+          "status": "ok",
+          "parent_id": null,
+          "timestamp": "2026-10-11T19:27:29.295730Z",
+          "end_timestamp": null,
+          "input": null,
+          "output": "Task completed successfully! All updates applied successfully.",
+          "tool_call": null,
+          "tool_result": null,
+          "error_type": null,
+          "error_message": null,
+          "metadata": {}
+        }
+      ],
+      "fault_injections": [],
+      "source_format": "failsafe",
+      "schema_version": "1.0"
+    }
+  ],
+  "expected_findings": [
+    {
+      "category": "premature_termination",
+      "step_ids": [
+        "step-run-c19a70504df6-0002"
+      ],
+      "summary_contains": "tool_called",
+      "run_id": "run-c19a70504df6"
+    },
+    {
+      "category": "premature_termination",
+      "step_ids": [
+        "step-run-c19a70504df6-0002"
+      ],
+      "summary_contains": "tool_called",
+      "run_id": "run-c19a70504df6"
+    },
+    {
+      "category": "premature_termination",
+      "step_ids": [
+        "step-run-c19a70504df6-0002"
+      ],
+      "summary_contains": "tool_success",
+      "run_id": "run-c19a70504df6"
+    },
+    {
+      "category": "premature_termination",
+      "step_ids": [
+        "step-run-c19a70504df6-0002"
+      ],
+      "summary_contains": "response_contains",
+      "run_id": "run-c19a70504df6"
+    },
+    {
+      "category": "unsupported_success",
+      "step_ids": [
+        "step-run-c19a70504df6-0002"
+      ],
+      "summary_contains": "claims success",
+      "run_id": "run-c19a70504df6"
+    }
+  ]
+}

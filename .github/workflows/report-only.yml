@@ -1,0 +1,37 @@
+name: Report-only evaluation
+
+# Report-only mode: runs the evaluation harness and uploads results as
+# artifacts. It NEVER blocks a build — exploratory evaluations only.
+on:
+  schedule:
+    - cron: "0 6 * * 1"  # weekly
+  workflow_dispatch:
+
+jobs:
+  evaluate:
+    name: Evaluation experiments (report-only)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -e ".[dev]" && pip install langgraph langchain-core
+      - name: Detector evaluation (fixtures)
+        run: python evals/detector_eval.py
+      - name: Oracle reliability evaluation
+        run: python evals/oracle_reliability_eval.py
+      - name: Fault-injection recovery evaluation
+        run: python evals/fault_injection_eval.py
+      - name: Regression-test evaluation (failing -> passing)
+        run: python evals/regression_eval.py
+      - name: Adaptive vs fixed testing
+        run: python evals/adaptive_vs_fixed.py
+      - name: MAST harness (external benchmark BLOCKED without dataset)
+        run: python evals/mast/harness.py
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: evals/results/

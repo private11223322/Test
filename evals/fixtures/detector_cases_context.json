@@ -1,0 +1,97 @@
+{
+  "description": "detector_cases_context",
+  "traces": [
+    {
+      "id": "trace-94240998f05a",
+      "metadata": {
+        "run_id": "run-66fa223711ae",
+        "agent_name": "ctx-agent",
+        "agent_version": null,
+        "task_id": null,
+        "task_name": null,
+        "status": "success",
+        "started_at": "2026-10-11T19:27:29.296986Z",
+        "ended_at": "2026-10-11T19:27:29.297131Z",
+        "seed": null,
+        "environment": {},
+        "llm_usage": {},
+        "labels": {},
+        "final_response": "The plan is free.",
+        "error": null
+      },
+      "task": null,
+      "steps": [
+        {
+          "id": "step-run-66fa223711ae-0001",
+          "kind": "llm",
+          "name": "llm",
+          "status": "ok",
+          "parent_id": null,
+          "timestamp": "2026-10-11T19:27:29.297001Z",
+          "end_timestamp": null,
+          "input": {
+            "prompt": "What is the plan for u-1001?"
+          },
+          "output": {
+            "response": "free"
+          },
+          "tool_call": null,
+          "tool_result": null,
+          "error_type": null,
+          "error_message": null,
+          "metadata": {}
+        },
+        {
+          "id": "step-run-66fa223711ae-0002",
+          "kind": "llm",
+          "name": "llm",
+          "status": "ok",
+          "parent_id": null,
+          "timestamp": "2026-10-11T19:27:29.297023Z",
+          "end_timestamp": null,
+          "input": {
+            "prompt": "What is the plan for u-1001?"
+          },
+          "output": {
+            "response": "free"
+          },
+          "tool_call": null,
+          "tool_result": null,
+          "error_type": null,
+          "error_message": null,
+          "metadata": {}
+        },
+        {
+          "id": "step-run-66fa223711ae-0003",
+          "kind": "response",
+          "name": "final_response",
+          "status": "ok",
+          "parent_id": null,
+          "timestamp": "2026-10-11T19:27:29.297035Z",
+          "end_timestamp": null,
+          "input": null,
+          "output": "The plan is free.",
+          "tool_call": null,
+          "tool_result": null,
+          "error_type": null,
+          "error_message": null,
+          "metadata": {}
+        }
+      ],
+      "fault_injections": [],
+      "source_format": "failsafe",
+      "schema_version": "1.0"
+    }
+  ],
+  "expected_findings": [
+    {
+      "category": "lost_context",
+      "step_ids": [
+        "step-run-66fa223711ae-0001",
+        "step-run-66fa223711ae-0002"
+      ],
+      "summary_contains": "Identical request",
+      "run_id": "run-66fa223711ae"
+    }
+  ]
+}

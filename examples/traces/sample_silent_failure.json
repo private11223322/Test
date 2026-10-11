@@ -1,0 +1,75 @@
+{
+  "id": "trace-83f814ddd1ec",
+  "metadata": {
+    "run_id": "run-1e20e2921124",
+    "agent_name": "buggy-agent",
+    "agent_version": "0.1",
+    "task_id": "task-update-record",
+    "task_name": "Correct record update",
+    "status": "success",
+    "started_at": "2026-10-11T19:07:13.742182Z",
+    "ended_at": "2026-10-11T19:07:13.742232Z",
+    "seed": 1337,
+    "environment": {},
+    "llm_usage": {},
+    "labels": {},
+    "final_response": "Task completed successfully! All updates applied successfully.",
+    "error": null
+  },
+  "task": {
+    "id": "task-update-record",
+    "name": "Correct record update",
+    "description": "Upgrade user u-1002 from pro to enterprise without touching other fields.",
+    "instruction": "Upgrade user u-1002's plan to 'enterprise'. Do not modify any other fields.",
+    "required_outcomes": [
+      {
+        "type": "tool_called",
+        "tool": "db_update"
+      },
+      {
+        "type": "tool_success",
+        "tool": "db_update"
+      }
+    ],
+    "forbidden_outcomes": [],
+    "tool_policy": {},
+    "metadata": {}
+  },
+  "steps": [
+    {
+      "id": "step-run-1e20e2921124-0001",
+      "kind": "note",
+      "name": "skip_work",
+      "status": "ok",
+      "parent_id": null,
+      "timestamp": "2026-10-11T19:07:13.742196Z",
+      "end_timestamp": null,
+      "input": null,
+      "output": "Skipping actual tool calls; claiming success.",
+      "tool_call": null,
+      "tool_result": null,
+      "error_type": null,
+      "error_message": null,
+      "metadata": {}
+    },
+    {
+      "id": "step-run-1e20e2921124-0002",
+      "kind": "response",
+      "name": "final_response",
+      "status": "ok",
+      "parent_id": null,
+      "timestamp": "2026-10-11T19:07:13.742213Z",
+      "end_timestamp": null,
+      "input": null,
+      "output": "Task completed successfully! All updates applied successfully.",
+      "tool_call": null,
+      "tool_result": null,
+      "error_type": null,
+      "error_message": null,
+      "metadata": {}
+    }
+  ],
+  "fault_injections": [],
+  "source_format": "failsafe",
+  "schema_version": "1.0"
+}

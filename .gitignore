@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Failsafe local data
+.failsafe/
+failsafe.db
+*.db
+reports/
+evals/results/
+
+# Secrets — never commit
+.env
+*.pem
+*.key
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Docker volumes
+pgdata/
+demo-workspace/

@@ -1,0 +1,97 @@
+{
+  "description": "mast-mapped: detector_cases_context",
+  "traces": [
+    {
+      "id": "trace-eb1b472b4681",
+      "metadata": {
+        "run_id": "run-d29cd9c97e1a",
+        "agent_name": "ctx-agent",
+        "agent_version": null,
+        "task_id": null,
+        "task_name": null,
+        "status": "success",
+        "started_at": "2026-10-11T19:10:03.426196Z",
+        "ended_at": "2026-10-11T19:10:03.426256Z",
+        "seed": null,
+        "environment": {},
+        "llm_usage": {},
+        "labels": {},
+        "final_response": "The plan is free.",
+        "error": null
+      },
+      "task": null,
+      "steps": [
+        {
+          "id": "step-run-d29cd9c97e1a-0001",
+          "kind": "llm",
+          "name": "llm",
+          "status": "ok",
+          "parent_id": null,
+          "timestamp": "2026-10-11T19:10:03.426210Z",
+          "end_timestamp": null,
+          "input": {
+            "prompt": "What is the plan for u-1001?"
+          },
+          "output": {
+            "response": "free"
+          },
+          "tool_call": null,
+          "tool_result": null,
+          "error_type": null,
+          "error_message": null,
+          "metadata": {}
+        },
+        {
+          "id": "step-run-d29cd9c97e1a-0002",
+          "kind": "llm",
+          "name": "llm",
+          "status": "ok",
+          "parent_id": null,
+          "timestamp": "2026-10-11T19:10:03.426231Z",
+          "end_timestamp": null,
+          "input": {
+            "prompt": "What is the plan for u-1001?"
+          },
+          "output": {
+            "response": "free"
+          },
+          "tool_call": null,
+          "tool_result": null,
+          "error_type": null,
+          "error_message": null,
+          "metadata": {}
+        },
+        {
+          "id": "step-run-d29cd9c97e1a-0003",
+          "kind": "response",
+          "name": "final_response",
+          "status": "ok",
+          "parent_id": null,
+          "timestamp": "2026-10-11T19:10:03.426243Z",
+          "end_timestamp": null,
+          "input": null,
+          "output": "The plan is free.",
+          "tool_call": null,
+          "tool_result": null,
+          "error_type": null,
+          "error_message": null,
+          "metadata": {}
+        }
+      ],
+      "fault_injections": [],
+      "source_format": "failsafe",
+      "schema_version": "1.0"
+    }
+  ],
+  "expected_findings": [
+    {
+      "category": "lost_context",
+      "step_ids": [
+        "step-run-d29cd9c97e1a-0001",
+        "step-run-d29cd9c97e1a-0002"
+      ],
+      "summary_contains": "Identical request",
+      "run_id": "run-d29cd9c97e1a"
+    }
+  ]
+}

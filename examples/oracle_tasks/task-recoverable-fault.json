@@ -1,0 +1,53 @@
+{
+  "spec": {
+    "id": "task-recoverable-fault",
+    "name": "Recover from a transient tool failure",
+    "description": "A tool fails transiently; the agent must retry and complete the update.",
+    "instruction": "Set user u-1001's plan to 'pro'. If a tool call fails transiently, retry it. Confirm when done.",
+    "required_outcomes": [
+      {
+        "type": "tool_called",
+        "tool": "db_update"
+      },
+      {
+        "type": "tool_success",
+        "tool": "db_update"
+      }
+    ],
+    "forbidden_outcomes": [],
+    "tool_policy": {},
+    "metadata": {}
+  },
+  "oracle_checks": [
+    {
+      "check": "world_record_equals",
+      "id": "u-1001",
+      "fields": {
+        "plan": "pro"
+      }
+    },
+    {
+      "check": "faults_injected_count",
+      "count": 1,
+      "op": ">="
+    },
+    {
+      "check": "agent_recovered"
+    }
+  ],
+  "tools_required": [
+    "db_update"
+  ],
+  "fault_schedule": [
+    {
+      "kind": "error",
+      "tool": "db_update",
+      "occurrence": 1,
+      "params": {
+        "message": "transient failure"
+      }
+    }
+  ],
+  "expected_behavior": "Agent retries after the injected failure and completes the update; recovery is credited only because the oracle verified the outcome.",
+  "category": "recovery"
+}
